@@ -66,3 +66,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/roboto_mono/RobotoMono-Regular.ttf
+        - asset: fonts/roboto_mono/RobotoMono-Light.ttf
+          weight: 200
+        - asset: fonts/roboto_mono/RobotoMono-Thin.ttf
+          weight: 100
+    - family: OpenSans
+      fonts:
+        - asset: fonts/Open_Sans/OpenSans-Regular.ttf
+        - asset: fonts/Open_Sans/OpenSans-Light.ttf
+          weight: 200
+    - family: FlutterIcon
+      fonts:
+        - asset: fonts/FlutterIcon.ttf
