@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demos/Day01/StopWatch.dart';
+import 'package:flutter_demos/Day01/stop_watch_page.dart';
 
 class HomePage extends StatelessWidget {
   Widget pageCell(
@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
       body: ListView(
         primary: false,
         children: <Widget>[
-          pageCell(context, null, "计时器", StopWatch()),
+          pageCell(context, null, "计时器", StopWatchPage()),
         ],
       ),
     );
