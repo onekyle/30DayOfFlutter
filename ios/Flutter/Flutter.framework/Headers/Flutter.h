@@ -8,9 +8,6 @@
 /**
  BREAKING CHANGES:
 
- December 17, 2018:
-  - Changed designated initializer on FlutterEngine
-
  October 5, 2018:
   - Removed FlutterNavigationController.h/.mm
   - Changed return signature of `FlutterDartHeadlessCodeRunner.run*` from void

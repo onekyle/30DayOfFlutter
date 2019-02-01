@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+//import 'dart:core';
+import 'dart:async';
 
 class StopWatchPage extends StatefulWidget {
   @override
-  State<StatefulWidget> get createState {
+  State<StatefulWidget> createState() {
     return StopWatchState();
   }
 }
@@ -28,8 +30,8 @@ class StopWatchState extends State<StopWatchPage> {
             totalTime: this.totalTime,
           ),
           _WatchControlButton(
-            clickLeftButton: _onClickStart,
-            clickRightButton: _onClickShift,
+            clickLeftButton: _onClickShift,
+            clickRightButton: _onClickStart,
             watchOn: _stopwatch.isRunning,
           )
         ],
@@ -37,7 +39,34 @@ class StopWatchState extends State<StopWatchPage> {
     );
   }
 
-  void _onClickStart() {}
+  void _onClickStart() {
+    if (_stopwatch.isRunning) {
+      _stopwatch.stop();
+    } else {
+      _stopwatch.start();
+
+      Timer.periodic(Duration(milliseconds: 10), (timer) {
+        int milSecond,
+            second,
+            minute,
+            countingTime,
+            lapSecond,
+            lapSecond,
+            lapMinute,
+            lapCountingTime;
+        int countingTime = _stopwatch.elapsedMilliseconds;
+        minute = (countingTime / 1000 / 60).floor();
+        second = (countingTime - (minute * 60 * 1000));
+        print(countingTime);
+        // minute = (countingTime / 1000 / 60).floor();
+        // second = countingTime - 6000 * minute
+
+        if (!_stopwatch.isRunning) {
+          timer.cancel();
+        }
+      });
+    }
+  }
 
   void _onClickShift() {}
 }
@@ -105,7 +134,13 @@ class _WatchControlButton extends StatefulWidget {
   final bool watchOn;
 
   @override
-  final State<StatefulWidget> createState = _WatchControlBtnState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _WatchControlBtnState();
+  }
+
+  // @override
+  // final State<StatefulWidget> createState = _WatchControlBtnState();
 }
 
 class _WatchControlBtnState extends State<_WatchControlButton> {
@@ -118,7 +153,7 @@ class _WatchControlBtnState extends State<_WatchControlButton> {
   _clickStartBtn() {
     if (!widget.watchOn) {
       setState(() {
-        this.startBtnText = 'Stop__';
+        this.startBtnText = 'Stop';
         this.startBtnTextColor = Color(0xffff0044);
         this.shiftBtnText = 'Lap';
         this.shiftBtnTextColor = Color(0xffeeeeee);
@@ -131,6 +166,7 @@ class _WatchControlBtnState extends State<_WatchControlButton> {
         this.shiftBtnTextColor = Color(0xffeeeeee);
       });
     }
+    widget.clickRightButton();
   }
 
   @override
@@ -152,6 +188,7 @@ class _WatchControlBtnState extends State<_WatchControlButton> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(childWH * 0.5)),
               splashColor: Colors.black,
+              onTap: widget.clickLeftButton,
               child: Center(
                 child: Text(
                   this.shiftBtnText,

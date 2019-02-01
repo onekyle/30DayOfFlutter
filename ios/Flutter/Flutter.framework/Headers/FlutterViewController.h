@@ -151,11 +151,6 @@ FLUTTER_EXPORT
  */
 @property(nonatomic, getter=isViewOpaque) BOOL viewOpaque;
 
-/**
- * The `FlutterEngine` instance for this view controller.
- */
-@property(weak, nonatomic, readonly) FlutterEngine* engine;
-
 @end
 
 #endif  // FLUTTER_FLUTTERVIEWCONTROLLER_H_

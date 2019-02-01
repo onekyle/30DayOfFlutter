@@ -1,7 +1,7 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=/Users/durand/flutter
-FLUTTER_APPLICATION_PATH=/Users/durand/Desktop/MyGithubRepo/30DayOfFlutter
-FLUTTER_TARGET=/Users/durand/Desktop/MyGithubRepo/30DayOfFlutter/lib/main.dart
+FLUTTER_APPLICATION_PATH=/Users/durand/Desktop/MyGithubRepo/flutter/30DayOfFlutter
+FLUTTER_TARGET=/Users/durand/Desktop/MyGithubRepo/flutter/30DayOfFlutter/lib/main.dart
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build/ios
 FLUTTER_FRAMEWORK_DIR=/Users/durand/flutter/bin/cache/artifacts/engine/ios
