@@ -16,7 +16,8 @@ class StopWatchState extends State<StopWatchPage> {
   String intervalTime = '00:00:00';
   String totalTime = '00:00:00';
   Stopwatch _stopwatch = Stopwatch();
-
+  int _recordTime = 0;
+  List<String> _recordList = List();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +34,11 @@ class StopWatchState extends State<StopWatchPage> {
             clickLeftButton: _onClickShift,
             clickRightButton: _onClickStart,
             watchOn: _stopwatch.isRunning,
-          )
+          ),
+          Expanded(
+              child: _WatchRecord(
+            recordList: _recordList,
+          ))
         ],
       ),
     );
@@ -50,14 +55,34 @@ class StopWatchState extends State<StopWatchPage> {
             second,
             minute,
             countingTime,
-            lapSecond,
+            lapMilSecond,
             lapSecond,
             lapMinute,
             lapCountingTime;
-        int countingTime = _stopwatch.elapsedMilliseconds;
+        countingTime = _stopwatch.elapsedMilliseconds;
         minute = (countingTime / 1000 / 60).floor();
-        second = (countingTime - (minute * 60 * 1000));
-        print(countingTime);
+        second = ((countingTime - (minute * 60 * 1000)) / 1000).floor();
+        milSecond = ((countingTime % 1000) / 10).floor();
+
+        lapCountingTime = countingTime - _recordTime;
+        lapMinute = (lapCountingTime / 1000 / 60).floor();
+        lapSecond = ((lapCountingTime - (minute * 60 * 1000)) / 1000).floor();
+        lapMilSecond = ((lapCountingTime % 1000) / 10).floor();
+        // print(countingTime);
+
+        setState(() {
+          totalTime = (minute % 60).toString().padLeft(2, '0') +
+              ":" +
+              (second % 60).toString().padLeft(2, '0') +
+              "." +
+              (milSecond % 60).toString().padLeft(2, '0');
+
+          intervalTime = (lapMinute % 60).toString().padLeft(2, '0') +
+              ":" +
+              (lapSecond % 60).toString().padLeft(2, '0') +
+              "." +
+              (lapMilSecond % 60).toString().padLeft(2, '0');
+        });
         // minute = (countingTime / 1000 / 60).floor();
         // second = countingTime - 6000 * minute
 
@@ -68,7 +93,21 @@ class StopWatchState extends State<StopWatchPage> {
     }
   }
 
-  void _onClickShift() {}
+  void _onClickShift() {
+    if (_stopwatch.isRunning) {
+      _recordTime = _stopwatch.elapsedMilliseconds;
+      _recordList.add(intervalTime);
+    } else {
+      setState(() {
+        intervalTime = '00:00.00';
+        totalTime = '00:00.00';
+        _recordList.clear();
+        _recordTime = 0;
+      });
+
+      _stopwatch.reset();
+    }
+  }
 }
 
 class _WatchPlate extends StatelessWidget {
@@ -121,6 +160,48 @@ class _WatchPlate extends StatelessWidget {
   }
 }
 
+class _WatchRecord extends StatelessWidget {
+  _WatchRecord({Key key, this.recordList}) : super(key: key);
+
+  final List<String> recordList;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: recordList.length,
+      itemBuilder: (context, index) {
+        int targetIndex = recordList.length - index;
+        return Container(
+          height: 40.0,
+          padding:
+              EdgeInsets.only(top: 5.0, left: 30.0, right: 30.0, bottom: 5.0),
+          decoration: BoxDecoration(
+              border: BorderDirectional(
+                  bottom: BorderSide(color: Color(0xFFBBBBBB)))),
+          child: Row(
+            children: <Widget>[
+              Container(
+                child: Text(
+                  '计次 $targetIndex',
+                  style: TextStyle(color: Color(0xFF777777)),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  recordList[targetIndex - 1],
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: Color(0xFF222222), fontFamily: "RobotoMono"),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _WatchControlButton extends StatefulWidget {
   _WatchControlButton(
       {Key key,
@@ -148,7 +229,7 @@ class _WatchControlBtnState extends State<_WatchControlButton> {
   Color startBtnTextColor = Color(0xff60b644);
   // 计次/ 重置
   String shiftBtnText = 'Lap';
-  Color shiftBtnTextColor = Color(0xffeeeeee);
+  Color shiftBtnTextColor = Color(0xff60b644);
 
   _clickStartBtn() {
     if (!widget.watchOn) {
@@ -156,17 +237,28 @@ class _WatchControlBtnState extends State<_WatchControlButton> {
         this.startBtnText = 'Stop';
         this.startBtnTextColor = Color(0xffff0044);
         this.shiftBtnText = 'Lap';
-        this.shiftBtnTextColor = Color(0xffeeeeee);
+        this.shiftBtnTextColor = Color(0xff60b644);
       });
     } else {
       setState(() {
         this.startBtnText = 'Start';
         this.startBtnTextColor = Color(0xff60b644);
         this.shiftBtnText = 'Reset';
-        this.shiftBtnTextColor = Color(0xffeeeeee);
+        this.shiftBtnTextColor = Color(0xffff0044);
       });
     }
     widget.clickRightButton();
+  }
+
+  _clickShiftBtn() {
+    if (widget.watchOn) {
+    } else {
+      setState(() {
+        this.shiftBtnText = 'Lap';
+        this.shiftBtnTextColor = Color(0xff60b644);
+      });
+    }
+    widget.clickLeftButton();
   }
 
   @override
@@ -188,7 +280,7 @@ class _WatchControlBtnState extends State<_WatchControlButton> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(childWH * 0.5)),
               splashColor: Colors.black,
-              onTap: widget.clickLeftButton,
+              onTap: _clickShiftBtn,
               child: Center(
                 child: Text(
                   this.shiftBtnText,
